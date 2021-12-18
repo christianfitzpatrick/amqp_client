@@ -36,14 +36,15 @@ class Frame:
         self.frame_type = frame_type
         self.channel_number = channel_number
 
-    def _marshal(self, frame_components):
-        """Pack the encoded frame data into a wire-level format for RPC transmission
+    def _marshal(self, encoded_payload):
+        """Pack the fully encoded frame data into a wire-level format for RPC transmission
 
-        The encoding of the individual frame components is implemented by the specific frame type
-        :param frame_components: the encodings of each piece of frame data
+        The encoding of the payload is implemented by each specific frame type instance
+
+        :param encoded_payload: the encoded payload contents for the frame
         """
 
-        payload = b"".join(frame_components)
+        payload = b"".join(encoded_payload)
         payload_size = len(payload)
 
         # [-------- FRAME HEADER --------]
@@ -59,8 +60,8 @@ class Frame:
         return header + payload + FRAME_END_BYTE
 
     @abc.abstractmethod
-    def encode_frame_components(self):
-        """Encode the components of the particular frame type
+    def encode_payload(self):
+        """Encode the payload of the particular frame type
 
         MUST be implemented for EACH frame type
         """
