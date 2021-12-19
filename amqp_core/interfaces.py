@@ -9,13 +9,16 @@ Christian Fitzpatrick
 import enum
 
 
-class STATES(enum.Enum):
+class States(enum.Enum):
     """Connection/channel states"""
 
     CLOSED = 0
     CLOSING = 1
     OPEN = 2
     OPENING = 3
+
+    def __eq__(self, other) -> bool:
+        return self.value == other
 
 
 class ChannelWriter:
@@ -47,7 +50,7 @@ class AMQPStatefulInstance:
     """Base instance for an AMQP class that carries connection/channel oriented state"""
 
     def __init__(self):
-        self._state = STATES.CLOSED
+        self._state = States.CLOSED
 
 
 class AMQPChannel(AMQPStatefulInstance):
