@@ -130,8 +130,15 @@ def read_frame(socket_data: bytes):
     # Match on frame type and build out a frame of corresponding type
     match frame_type:
         case FrameType.FRAME_METHOD:
+            # Identify the specific AMQP command to map to
+            # Command: Class.Method
             class_id, method_id = struct.unpack(">HH", payload[0:4])
-            method = AMQPMethod(class_id, method_id)
+
+            # Build the body of a method frame
+            method = AMQPMethod(class_id, method_id).encode()
+
+            # Marshal the AMQP method data into a method frame stub
+            return MethodFrame(frame_channel, method)
 
         case FrameType.FRAME_HEADER:
             pass
